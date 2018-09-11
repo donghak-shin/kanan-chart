@@ -83,22 +83,29 @@ window.kananChart = (function () {
             var chart = this.get(id);
             var candles = chart.candles;
 
-            console.log(chart);
-            // var parentEl = document.createElement('div');
-            // parentEl.className = 'kanan-chart-candles';
+            var chartElement = chart.el;
+            var candlesElement = chart.el.getElementsByClassName('kanan-chart-candles');
 
-            // this.el = document.createElement('div');
-            // this.el.classList.add('kanan-chart-candle');
+            if (candlesElement.length > 0) {
+                candlesElement = candlesElement[0];
+            } else {
+                candlesElement = document.createElement('div');
+                candlesElement.className = 'kanan-chart-candles';
+                chartElement.append(candlesElement);
+            }
 
-            // if (this.open > this.close) {
-            //     this.el.style.color = '#00f';
-            //     this.el.innerText = 'fall';
-            // } else if (this.open < this.close) {
-            //     this.el.style.color = '#f00';
-            //     this.el.innerText = 'rise';
-            // } else {
-            //     this.el.innerText = 'even';
-            // }
+            candles.forEach(function (candle) {
+                var el = candle.el;
+                if (el === undefined) {
+                    el = document.createElement('div');
+                    el.className = 'kanan-chart-candle';
+
+                    candle.el = el;
+                    candlesElement.append(el);
+                }
+
+                el.innerHTML = candle.change;
+            });
         }
     };
 
