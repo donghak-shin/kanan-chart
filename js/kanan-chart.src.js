@@ -80,22 +80,14 @@ window.kananChart = (function () {
                 return Error('Can not find element');
             }
 
-            // var el = document.createElement('div');
-
             var candles = [];
             if (options.series) {
-                // var candles = document.createElement('div');
-                // candles.classList.add('kanan-chart-candles');
                 options.series.forEach(function (s) {
                     var candle = new Candle(s);
-                    // candles.append(candle.el);
                     candles.push(candle);
                 });
-
-                // el.append(candles);
             }
 
-            // chartParent.el.append(el);
             chartParent.candles = candles;
 
             if (!options.id) {
