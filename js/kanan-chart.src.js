@@ -1,6 +1,35 @@
 window.kananChart = (function () {
     function KananChart(el) {
         this.el = el;
+
+        this.render = function () {
+            var chart = this;
+            var candles = chart.candles;
+
+            var chartElement = chart.el;
+            var candlesElement = chart.el.getElementsByClassName('kanan-chart-candles');
+
+            if (candlesElement.length > 0) {
+                candlesElement = candlesElement[0];
+            } else {
+                candlesElement = document.createElement('div');
+                candlesElement.className = 'kanan-chart-candles';
+                chartElement.append(candlesElement);
+            }
+
+            candles.forEach(function (candle) {
+                var el = candle.el;
+                if (el === undefined) {
+                    el = document.createElement('div');
+                    el.className = 'kanan-chart-candle';
+
+                    candle.el = el;
+                    candlesElement.append(el);
+                }
+
+                el.innerHTML = candle.change;
+            });
+        }
     }
 
     function Candle(options) {
@@ -76,36 +105,8 @@ window.kananChart = (function () {
             chartParent.id = options.id;
             this.charts.push(chartParent);
 
-            this.render(options.id);
+            chartParent.render(options.id);
             return chartParent;
-        },
-        render: function (id) {
-            var chart = this.get(id);
-            var candles = chart.candles;
-
-            var chartElement = chart.el;
-            var candlesElement = chart.el.getElementsByClassName('kanan-chart-candles');
-
-            if (candlesElement.length > 0) {
-                candlesElement = candlesElement[0];
-            } else {
-                candlesElement = document.createElement('div');
-                candlesElement.className = 'kanan-chart-candles';
-                chartElement.append(candlesElement);
-            }
-
-            candles.forEach(function (candle) {
-                var el = candle.el;
-                if (el === undefined) {
-                    el = document.createElement('div');
-                    el.className = 'kanan-chart-candle';
-
-                    candle.el = el;
-                    candlesElement.append(el);
-                }
-
-                el.innerHTML = candle.change;
-            });
         }
     };
 
