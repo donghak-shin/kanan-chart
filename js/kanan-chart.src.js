@@ -18,54 +18,56 @@ window.kananChart = (function () {
             this.close = options.close;
         }
 
-        this.el = document.createElement('div');
-        this.el.classList.add('kanan-chart-candle');
-
         if (this.open > this.close) {
-            this.el.style.color = '#00f';
-            this.el.innerText = 'fall';
+            this.change = 'fall';
         } else if (this.open < this.close) {
-            this.el.style.color = '#f00';
-            this.el.innerText = 'rise';
+            this.change = 'rise';
         } else {
-            this.el.innerText = 'even';
+            this.change = 'even';
         }
     }
 
     var kananChart = {
         charts: [],
-        get: function (selector) {
-            var el;
-            if (typeof selector === 'string') {
-                el = document.getElementById(selector);
-            } else if (selector.length) {
-                el = selector[0];
-            } else {
-                el = selector;
-            }
+        get: function (id) {
+            // var el;
+            // if (typeof selector === 'string') {
+            //     el = document.getElementById(selector);
+            // } else if (selector.length) {
+            //     el = selector[0];
+            // } else {
+            //     el = selector;
+            // }
 
-            return new KananChart(el);
+            // return new KananChart(el);
+
+            return this.charts.find(function (chart) {
+                return chart.id === id;
+            });
         },
         chart: function (selector, options) {
             var chartParent = new KananChart(document.querySelector(selector));
             if (!chartParent) {
-                return Error('can not find element');
+                return Error('Can not find element');
             }
 
-            var el = document.createElement('div');
+            // var el = document.createElement('div');
 
+            var candles = [];
             if (options.series) {
-                var candles = document.createElement('div');
-                candles.classList.add('kanan-chart-candles');
+                // var candles = document.createElement('div');
+                // candles.classList.add('kanan-chart-candles');
                 options.series.forEach(function (s) {
                     var candle = new Candle(s);
-                    candles.append(candle.el);
+                    // candles.append(candle.el);
+                    candles.push(candle);
                 });
 
-                el.append(candles);
+                // el.append(candles);
             }
 
-            chartParent.el.append(el);
+            // chartParent.el.append(el);
+            chartParent.candles = candles;
 
             if (!options.id) {
                 options.id = 'default-id-test';
@@ -74,10 +76,29 @@ window.kananChart = (function () {
             chartParent.id = options.id;
             this.charts.push(chartParent);
 
+            this.render(options.id);
             return chartParent;
         },
-        add: function (data) {
-            console.log(this);
+        render: function (id) {
+            var chart = this.get(id);
+            var candles = chart.candles;
+
+            console.log(chart);
+            // var parentEl = document.createElement('div');
+            // parentEl.className = 'kanan-chart-candles';
+
+            // this.el = document.createElement('div');
+            // this.el.classList.add('kanan-chart-candle');
+
+            // if (this.open > this.close) {
+            //     this.el.style.color = '#00f';
+            //     this.el.innerText = 'fall';
+            // } else if (this.open < this.close) {
+            //     this.el.style.color = '#f00';
+            //     this.el.innerText = 'rise';
+            // } else {
+            //     this.el.innerText = 'even';
+            // }
         }
     };
 
