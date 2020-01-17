@@ -1,2 +1,7 @@
 @charset "utf-8";
 
+#kanan-chart,
+#suwawa-chart {
+    width: 320px;
+    height: 180px;
+}

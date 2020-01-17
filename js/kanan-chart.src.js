@@ -14,6 +14,7 @@ window.kananChart = (function () {
             } else {
                 candlesElement = document.createElement('div');
                 candlesElement.className = 'kanan-chart-candles';
+                candlesElement.style.position = 'relative';
                 chartElement.append(candlesElement);
             }
 
@@ -22,12 +23,22 @@ window.kananChart = (function () {
                 if (el === undefined) {
                     el = document.createElement('div');
                     el.className = 'kanan-chart-candle';
+                    el.style.position = 'absolute';
 
                     candle.el = el;
                     candlesElement.append(el);
                 }
 
-                el.innerHTML = candle.change;
+                // FIXME: wtf
+                el.style.backgroundColor = candle.change === 1 ?
+                                 'red' :
+                                 candle.change === -1 ?
+                                 'blue' :
+                                 'black';
+                el.style.left = (candle.id * 5) + 'px';
+                el.style.top = chart.el.clientHeight - candle.open + 'px';
+                el.style.width = '4px';
+                el.style.height = ((candle.high - candle.low) || 1) + 'px';
             });
         }
 
@@ -77,11 +88,11 @@ window.kananChart = (function () {
         }
 
         if (this.open > this.close) {
-            this.change = 'fall';
+            this.change = -1;
         } else if (this.open < this.close) {
-            this.change = 'rise';
+            this.change = 1;
         } else {
-            this.change = 'even';
+            this.change = 0;
         }
     }
 
