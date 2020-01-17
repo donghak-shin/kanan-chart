@@ -1,5 +1,5 @@
 var chart = kananChart.chart('#kanan-chart', {
-  series: [
+  data: [
     {
       id: 1,
       open: 30,
@@ -14,7 +14,7 @@ var chart = kananChart.chart('#kanan-chart', {
 
 var chart2 = kananChart.chart('#suwawa-chart', {
   id: 'suwawa',
-  series: [
+  data: [
     [1, 100, 113, 99, 108],
     [2, 108, 111, 108, 110],
     [3, 143, 143, 143, 143],

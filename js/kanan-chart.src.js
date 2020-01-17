@@ -30,6 +30,35 @@ window.kananChart = (function () {
                 el.innerHTML = candle.change;
             });
         }
+
+        this.setData = function (data) {
+            if (!Array.isArray(data)) {
+                return Error('Data must be an array');
+            }
+
+            var candles = [];
+
+            data.forEach(function (s) {
+                var candle = new Candle(s);
+                candles.push(candle);
+            });
+
+            this.candles = candles;
+            this.render();
+        }
+
+        this.addPoint = function (point) {
+            if (point === undefined) {
+                return Error('Point must not be empty');
+            }
+
+            if (!point instanceof Object && !Array.isArray(point)) {
+                return Error('Point must be an object/array');
+            }
+
+            this.candles.push(new Candle(point));
+            this.render();
+        }
     }
 
     function Candle(options) {
@@ -59,17 +88,6 @@ window.kananChart = (function () {
     var kananChart = {
         charts: [],
         get: function (id) {
-            // var el;
-            // if (typeof selector === 'string') {
-            //     el = document.getElementById(selector);
-            // } else if (selector.length) {
-            //     el = selector[0];
-            // } else {
-            //     el = selector;
-            // }
-
-            // return new KananChart(el);
-
             return this.charts.find(function (chart) {
                 return chart.id === id;
             });
@@ -80,9 +98,11 @@ window.kananChart = (function () {
                 return Error('Can not find element');
             }
 
+            chartParent.userOptions = options;
+
             var candles = [];
-            if (options.series) {
-                options.series.forEach(function (s) {
+            if (options.data) {
+                options.data.forEach(function (s) {
                     var candle = new Candle(s);
                     candles.push(candle);
                 });
@@ -97,7 +117,7 @@ window.kananChart = (function () {
             chartParent.id = options.id;
             this.charts.push(chartParent);
 
-            chartParent.render(options.id);
+            chartParent.render();
             return chartParent;
         }
     };
