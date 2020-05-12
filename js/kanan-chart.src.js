@@ -1,4 +1,4 @@
-window.kananChart = (function () {
+window.KananChart = (function () {
     function KananChart(el) {
         this.el = el;
 

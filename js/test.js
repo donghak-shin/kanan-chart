@@ -1,4 +1,4 @@
-var chart = kananChart.chart('#chart1', {
+var chart = KananChart.chart('#chart1', {
   data: [
     {
       id: 1,
@@ -12,7 +12,7 @@ var chart = kananChart.chart('#chart1', {
   ]
 });
 
-var chart2 = kananChart.chart('#chart2', {
+var chart2 = KananChart.chart('#chart2', {
   id: 'suwawa',
   data: [
     [1, 100, 109, 99, 108],
