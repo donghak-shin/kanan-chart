@@ -1,7 +1,12 @@
 @charset "utf-8";
 
-#kanan-chart,
-#suwawa-chart {
+.kanan-chart {
     width: 320px;
     height: 180px;
+    border: 1px solid #000;
+    margin-bottom: 1em;
+}
+
+.kanan-chart:last-child {
+    margin-bottom: 0;
 }
