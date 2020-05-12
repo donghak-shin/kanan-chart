@@ -6,6 +6,28 @@ window.KananChart = (function () {
         this.min = null;
         this.max = null;
 
+        this.startX = null;
+        this.scrollLeft = null;
+
+        var dragging = function (e) {
+            e.preventDefault();
+
+            var x = e.pageX - this.el.offsetLeft;
+            var walk = x - this.startX;
+            this.el.scrollLeft = this.scrollLeft - walk;
+        }.bind(this);
+
+        this.el.addEventListener('mousedown', function (e) {
+            this.startX = e.pageX - this.el.offsetLeft;
+            this.scrollLeft = this.el.scrollLeft;
+
+            this.el.addEventListener('mousemove', dragging);
+        }.bind(this));
+
+        this.el.addEventListener('mouseup', function () {
+            this.el.removeEventListener('mousemove', dragging);
+        }.bind(this));
+
         this.render = function () {
             var chart = this;
             var candles = chart.candles;
@@ -34,14 +56,13 @@ window.KananChart = (function () {
                     candlesElement.append(el);
                 }
 
-                // FIXME: wtf
+                var ratio = chart.el.clientHeight / (chart.max - chart.min);
                 el.style.backgroundColor = candle.change === 1 ?
                                  'red' :
                                  candle.change === -1 ?
                                  'blue' :
                                  'black';
                 el.style.left = (i * 5) + 'px';
-                var ratio = chart.el.clientHeight / (chart.max - chart.min);
                 el.style.top = (chart.max - candle.high) * ratio + 'px';
                 el.style.width = '4px';
                 el.style.height = ((candle.high - candle.low) * ratio || 1) + 'px';
