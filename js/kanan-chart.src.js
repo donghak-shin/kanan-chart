@@ -1,8 +1,9 @@
 'use strict';
 
 window.KananChart = (function () {
-    function KananChart(el) {
+    function KananChart(el, options) {
         this.el = el;
+        this.id = options.id || 'default-id-test';
         this.candles = [];
         this.min = null;
         this.max = null;
@@ -154,27 +155,23 @@ window.KananChart = (function () {
             });
         },
         chart: function (selector, options) {
-            var chartParent = new KananChart(document.querySelector(selector));
-            if (!chartParent) {
+            var element = document.querySelector(selector);
+
+            if (element === null) {
                 return Error('Can not find element');
             }
 
-            chartParent.userOptions = options;
+            var chart = new KananChart(element, options);
 
             if (options.data) {
-                chartParent.setData(options.data);
+                chart.setData(options.data);
             }
 
-            if (!options.id) {
-                options.id = 'default-id-test';
-            }
+            this.charts.push(chart);
 
-            chartParent.id = options.id;
-            this.charts.push(chartParent);
+            chart.render();
 
-            chartParent.render();
-
-            return chartParent;
+            return chart;
         }
     };
 
