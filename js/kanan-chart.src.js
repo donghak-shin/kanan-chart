@@ -1,6 +1,10 @@
+'use strict';
+
 window.KananChart = (function () {
     function KananChart(el) {
         this.el = el;
+        this.min = null;
+        this.max = null;
 
         this.render = function () {
             var chart = this;
@@ -20,6 +24,7 @@ window.KananChart = (function () {
 
             candles.forEach(function (candle, i) {
                 var el = candle.el;
+
                 if (el === undefined) {
                     el = document.createElement('div');
                     el.className = 'kanan-chart-candle';
@@ -36,9 +41,10 @@ window.KananChart = (function () {
                                  'blue' :
                                  'black';
                 el.style.left = (i * 5) + 'px';
-                el.style.top = chart.el.clientHeight - candle.open + 'px';
+                var ratio = chart.el.clientHeight / (chart.max - chart.min);
+                el.style.top = (chart.max - candle.high) * ratio + 'px';
                 el.style.width = '4px';
-                el.style.height = ((candle.high - candle.low) || 1) + 'px';
+                el.style.height = ((candle.high - candle.low) * ratio || 1) + 'px';
             });
         }
 
@@ -48,9 +54,19 @@ window.KananChart = (function () {
             }
 
             var candles = [];
+            var _this = this;
 
             data.forEach(function (s) {
                 var candle = new Candle(s);
+
+                if (!_this.min || _this.min > candle.low) {
+                    _this.min = candle.low;
+                }
+
+                if (!_this.max || _this.max < candle.high) {
+                    _this.max = candle.high;
+                }
+
                 candles.push(candle);
             });
 
@@ -68,6 +84,15 @@ window.KananChart = (function () {
             }
 
             this.candles.push(new Candle(point));
+
+            if (!this.min || this.min > candle.low) {
+                this.min = candle.low;
+            }
+
+            if (!this.max || this.max < candle.high) {
+                this.max = candle.high;
+            }
+
             this.render();
         }
     }
@@ -114,10 +139,7 @@ window.KananChart = (function () {
 
             var candles = [];
             if (options.data) {
-                options.data.forEach(function (s) {
-                    var candle = new Candle(s);
-                    candles.push(candle);
-                });
+                chartParent.setData(options.data);
             }
 
             chartParent.candles = candles;
@@ -130,6 +152,7 @@ window.KananChart = (function () {
             this.charts.push(chartParent);
 
             chartParent.render();
+
             return chartParent;
         }
     };
