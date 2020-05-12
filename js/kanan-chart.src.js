@@ -7,6 +7,11 @@ window.KananChart = (function () {
         this.candles = [];
         this.min = null;
         this.max = null;
+        this.colors = {
+            rise: '#f51818',
+            fall: '#1b61d1',
+            even: '#2b2b2b'
+        }
 
         var isDragging = false;
         var startX = null;
@@ -60,10 +65,10 @@ window.KananChart = (function () {
 
                 var ratio = this.el.clientHeight / (this.max - this.min);
                 el.style.backgroundColor = candle.change === 1 ?
-                                 'red' :
+                                 this.colors.rise :
                                  candle.change === -1 ?
-                                 'blue' :
-                                 'black';
+                                 this.colors.fall :
+                                 this.colors.even;
                 el.style.left = (i * 5) + 'px';
                 el.style.top = (this.max - candle.high) * ratio + 'px';
                 el.style.width = '4px';
