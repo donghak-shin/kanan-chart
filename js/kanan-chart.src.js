@@ -18,7 +18,7 @@ window.KananChart = (function () {
                 chartElement.append(candlesElement);
             }
 
-            candles.forEach(function (candle) {
+            candles.forEach(function (candle, i) {
                 var el = candle.el;
                 if (el === undefined) {
                     el = document.createElement('div');
@@ -35,7 +35,7 @@ window.KananChart = (function () {
                                  candle.change === -1 ?
                                  'blue' :
                                  'black';
-                el.style.left = (candle.id * 5) + 'px';
+                el.style.left = (i * 5) + 'px';
                 el.style.top = chart.el.clientHeight - candle.open + 'px';
                 el.style.width = '4px';
                 el.style.height = ((candle.high - candle.low) || 1) + 'px';
@@ -74,11 +74,12 @@ window.KananChart = (function () {
 
     function Candle(options) {
         if (Array.isArray(options)) {
-            this.id = options[0];
-            this.open = options[1];
-            this.high = options[2];
-            this.low = options[3];
-            this.close = options[4];
+            this.id = options.length === 5 ? options.shift() : null;
+
+            this.open = options[0];
+            this.high = options[1];
+            this.low = options[2];
+            this.close = options[3];
         } else {
             this.id = options.id;
             this.open = options.open;
