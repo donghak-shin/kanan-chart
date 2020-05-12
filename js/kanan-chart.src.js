@@ -3,37 +3,38 @@
 window.KananChart = (function () {
     function KananChart(el) {
         this.el = el;
+        this.candles = [];
         this.min = null;
         this.max = null;
 
-        this.startX = null;
-        this.scrollLeft = null;
-
-        var dragging = function (e) {
-            e.preventDefault();
-
-            var x = e.pageX - this.el.offsetLeft;
-            var walk = x - this.startX;
-            this.el.scrollLeft = this.scrollLeft - walk;
-        }.bind(this);
+        var isDragging = false;
+        var startX = null;
+        var scrollLeft = null;
 
         this.el.addEventListener('mousedown', function (e) {
-            this.startX = e.pageX - this.el.offsetLeft;
-            this.scrollLeft = this.el.scrollLeft;
-
-            this.el.addEventListener('mousemove', dragging);
+            isDragging = true;
+            startX = e.pageX - this.el.offsetLeft;
+            scrollLeft = this.el.scrollLeft;
         }.bind(this));
 
         this.el.addEventListener('mouseup', function () {
-            this.el.removeEventListener('mousemove', dragging);
+            isDragging = false;
+        }.bind(this));
+
+        this.el.addEventListener('mousemove', function (e) {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            var x = e.pageX - this.el.offsetLeft;
+            var walk = x - startX;
+            this.el.scrollLeft = scrollLeft - walk;
         }.bind(this));
 
         this.render = function () {
-            var chart = this;
-            var candles = chart.candles;
+            var candles = this.candles;
 
-            var chartElement = chart.el;
-            var candlesElement = chart.el.getElementsByClassName('kanan-chart-candles');
+            var chartElement = this.el;
+            var candlesElement = this.el.getElementsByClassName('kanan-chart-candles');
 
             if (candlesElement.length > 0) {
                 candlesElement = candlesElement[0];
@@ -56,18 +57,18 @@ window.KananChart = (function () {
                     candlesElement.append(el);
                 }
 
-                var ratio = chart.el.clientHeight / (chart.max - chart.min);
+                var ratio = this.el.clientHeight / (this.max - this.min);
                 el.style.backgroundColor = candle.change === 1 ?
                                  'red' :
                                  candle.change === -1 ?
                                  'blue' :
                                  'black';
                 el.style.left = (i * 5) + 'px';
-                el.style.top = (chart.max - candle.high) * ratio + 'px';
+                el.style.top = (this.max - candle.high) * ratio + 'px';
                 el.style.width = '4px';
                 el.style.height = ((candle.high - candle.low) * ratio || 1) + 'px';
-            });
-        }
+            }.bind(this));
+        };
 
         this.setData = function (data) {
             if (!Array.isArray(data)) {
@@ -93,6 +94,7 @@ window.KananChart = (function () {
 
             this.candles = candles;
             this.render();
+            this.el.scrollLeft = this.el.scrollLeftMax;
         }
 
         this.addPoint = function (point) {
@@ -104,7 +106,8 @@ window.KananChart = (function () {
                 return Error('Point must be an object/array');
             }
 
-            this.candles.push(new Candle(point));
+            var candle = new Candle(point);
+            this.candles.push(candle);
 
             if (!this.min || this.min > candle.low) {
                 this.min = candle.low;
@@ -158,12 +161,9 @@ window.KananChart = (function () {
 
             chartParent.userOptions = options;
 
-            var candles = [];
             if (options.data) {
                 chartParent.setData(options.data);
             }
-
-            chartParent.candles = candles;
 
             if (!options.id) {
                 options.id = 'default-id-test';
