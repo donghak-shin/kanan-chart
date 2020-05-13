@@ -51,21 +51,36 @@ export default class Chart {
 
             this.candles.forEach((candle, i) => {
                 const el = document.createElement('div')
-                el.className = 'kanan-chart-candle'
-                el.style.position = 'absolute'
-                candle.el = el
-                candlesElement.appendChild(el)
-
-                const ratio = this.el.clientHeight / (this.max - this.min)
-                el.style.backgroundColor = candle.change === 1 ?
+                const color = candle.change === 1 ?
                     this.colors.rise :
                     candle.change === -1 ?
                         this.colors.fall :
                         this.colors.even
-                el.style.left = (i * 5) + 'px'
+                el.className = 'kanan-chart-candle'
+                el.style.position = 'absolute'
+                candle.el = el
+
+                const ratio = this.el.clientHeight / (this.max - this.min)
+                el.style.border = '2px solid #fff'
+                el.style.borderTop = '0 none'
+                el.style.borderBottom = '0 none'
+                el.style.backgroundColor = color
+                el.style.left = (i * 6) + 'px'
                 el.style.top = (this.max - candle.high) * ratio + 'px'
-                el.style.width = '4px'
+                el.style.width = '5px'
                 el.style.height = ((candle.high - candle.low) * ratio || 1) + 'px'
+
+                const innerEl = document.createElement('div')
+                innerEl.className = 'kanan-chart-candle-inner'
+                innerEl.style.position = 'absolute'
+                innerEl.style.backgroundColor = color
+                innerEl.style.left = '-2px'
+                innerEl.style.top = (candle.high - Math.max(candle.open, candle.close)) * ratio + 'px'
+                innerEl.style.width = '5px'
+                innerEl.style.height = (Math.abs(candle.open - candle.close) * ratio || 1) + 'px'
+
+                el.appendChild(innerEl)
+                candlesElement.appendChild(el)
             })
 
             chartElement.appendChild(candlesElement)
