@@ -48,15 +48,33 @@ or
 
 ### KananChart.get(id: string)
 return chart object
+```
+const kospiChart = KananChart.get('kospi')
+```
 
 ### KananChart.charts
 return charts array
+```
+const charts = KananChart.charts
+```
 
 ### Chart.render()
 render chart
+```
+kospiChart.render()
+```
 
 ### Chart.setData(data: array<data>)
 replace new data
+```
+kospiChart.setData([
+    [2241.13,2241.76,2224.64,2232.56],
+    [2230.37,2235.70,2221.76,2226.60]
+])
+```
 
 ### Chart.addPoint(data: data)
 add new point
+```
+kospiChart.addPoint([1897.50,1940.42,1897.24,1940.42])
+```
