@@ -38,16 +38,15 @@ export default class Chart {
         })
 
         this.render = () => {
-            const chartElement = this.el
             let candlesElement = this.el.getElementsByClassName('kanan-chart-candles')
 
-            if (candlesElement.length > 0) {
-                candlesElement[0].remove()
+            if (candlesElement.length === 0) {
+                candlesElement = document.createElement('div')
+                candlesElement.className = 'kanan-chart-candles'
+                candlesElement.style.position = 'relative'
+            } else {
+                candlesElement = candlesElement[0]
             }
-
-            candlesElement = document.createElement('div')
-            candlesElement.className = 'kanan-chart-candles'
-            candlesElement.style.position = 'relative'
 
             this.candles.forEach((candle, i) => {
                 const el = document.createElement('div')
@@ -83,7 +82,7 @@ export default class Chart {
                 candlesElement.appendChild(el)
             })
 
-            chartElement.appendChild(candlesElement)
+            this.el.appendChild(candlesElement)
         }
 
         this.setData = (data) => {
@@ -111,6 +110,13 @@ export default class Chart {
             })
 
             this.candles = candles
+
+            let candlesElement = this.el.getElementsByClassName('kanan-chart-candles')
+
+            if (candlesElement.length > 0) {
+                candlesElement[0].remove()
+            }
+
             this.render()
             this.el.scrollLeft = this.el.scrollLeftMax
         }
