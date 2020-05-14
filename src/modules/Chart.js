@@ -50,9 +50,9 @@ export default class Chart {
 
             this.candles.forEach((candle, i) => {
                 const el = document.createElement('div')
-                const color = candle.change === 1 ?
+                const color = candle.close > candle.open ?
                     this.colors.rise :
-                    candle.change === -1 ?
+                    candle.close < candle.open ?
                         this.colors.fall :
                         this.colors.even
                 el.className = 'kanan-chart-candle'

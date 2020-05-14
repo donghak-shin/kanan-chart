@@ -15,13 +15,5 @@ export default class Candle {
             this.low = options.low
             this.close = options.close
         }
-
-        if (this.open > this.close) {
-            this.change = -1
-        } else if (this.open < this.close) {
-            this.change = 1
-        } else {
-            this.change = 0
-        }
     }
 }
